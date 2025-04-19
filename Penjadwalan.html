@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator Penjadwalan Proses</title>
+    <link rel="stylesheet" href="Penjadwalan.css">
+</head>
+<body>
+    <h1>Simulasi Penjadwalan Proses dalam Sistem Operasi</h1>
+    
+    <div class="container">
+        <div class="input-section">
+            <h2>Input Data Proses</h2>
+            
+            <table class="process-table">
+                <thead>
+                    <tr>
+                        <th>Proses ID</th>
+                        <th>Arrival Time</th>
+                        <th>Burst Time</th>
+                        <th>Priority</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="process-table-body">
+                    <tr>
+                        <td>P1</td>
+                        <td><input type="number" min="0" value="0" id="arrival-1"></td>
+                        <td><input type="number" min="1" value="6" id="burst-1"></td>
+                        <td><input type="number" min="1" value="2" id="priority-1"></td>
+                        <td><button onclick="removeProcess(this)" class="remove-btn">Hapus</button></td>
+                    </tr>
+                    <tr>
+                        <td>P2</td>
+                        <td><input type="number" min="0" value="2" id="arrival-2"></td>
+                        <td><input type="number" min="1" value="4" id="burst-2"></td>
+                        <td><input type="number" min="1" value="4" id="priority-2"></td>
+                        <td><button onclick="removeProcess(this)" class="remove-btn">Hapus</button></td>
+                    </tr>
+                    <tr>
+                        <td>P3</td>
+                        <td><input type="number" min="0" value="4" id="arrival-3"></td>
+                        <td><input type="number" min="1" value="2" id="burst-3"></td>
+                        <td><input type="number" min="1" value="1" id="priority-3"></td>
+                        <td><button onclick="removeProcess(this)" class="remove-btn">Hapus</button></td>
+                    </tr>
+                    <tr>
+                        <td>P4</td>
+                        <td><input type="number" min="0" value="6" id="arrival-4"></td>
+                        <td><input type="number" min="1" value="8" id="burst-4"></td>
+                        <td><input type="number" min="1" value="3" id="priority-4"></td>
+                        <td><button onclick="removeProcess(this)" class="remove-btn">Hapus</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="button-group">
+                <button onclick="addProcess()">Tambah Proses</button>
+                <button onclick="simulateAll()">Simulasikan Semua</button>
+                <button onclick="resetSimulation()">Reset</button>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <label for="quantum-input">Time Quantum untuk Round Robin:</label>
+                <input type="number" min="1" value="2" id="quantum-input">
+            </div>
+            
+            <div id="error-message" class="error"></div>
+        </div>
+        
+        <div class="algorithm-section">
+            <div class="tab-container">
+                <button class="tab active" onclick="openTab(event, 'fcfs-tab')">FCFS</button>
+                <button class="tab" onclick="openTab(event, 'sjf-tab')">SJF Non-Preemptive</button>
+                <button class="tab" onclick="openTab(event, 'sjf-preemptive-tab')">SJF Preemptive</button>
+                <button class="tab" onclick="openTab(event, 'rr-tab')">Round Robin</button>
+            </div>
+            
+            <div id="fcfs-tab" class="tab-content" style="display: block;">
+                <h3>First-Come, First-Served (FCFS)</h3>
+                <p>Proses dijalankan sesuai urutan kedatangan.</p>
+                <div id="fcfs-gantt" class="gantt-chart">
+                    <div class="empty-msg">Belum ada simulasi yang dijalankan.</div>
+                </div>
+                <div id="fcfs-metrics" class="metrics"></div>
+                <div id="fcfs-animation" class="animation-area">
+                    <div class="timer-display">Waktu: <span class="current-time">0</span></div>
+                    <div class="queue"><div class="queue-label">Antrian Proses (Waiting)</div></div>
+                    <div class="cpu">CPU (Running)</div>
+                    <div class="completed"><div class="completed-label">Proses Selesai (Completed)</div></div>
+                    <div class="status-box">
+                        <div class="status-item"><div class="status-indicator waiting-color"></div><span>Waiting</span></div>
+                        <div class="status-item"><div class="status-indicator running-color"></div><span>Running</span></div>
+                        <div class="status-item"><div class="status-indicator completed-color"></div><span>Completed</span></div>
+                    </div>
+                </div>
+                    <div class="animation-controls">
+                        <button onclick="runSingleAnimation('fcfs')" class="run-animation-btn">Jalankan Animasi FCFS</button>
+                    </div>
+            </div>
+            
+            <div id="sjf-non-preemptive-tab" class="tab-content">
+                <h3>Shortest Job First (SJF) - Non-preemptive</h3>
+                <p>Proses dengan burst time terpendek dijalankan terlebih dahulu.</p>
+                <div id="sjf-gantt" class="gantt-chart">
+                    <div class="empty-msg">Belum ada simulasi yang dijalankan.</div>
+                </div>
+                <div id="sjf-metrics" class="metrics"></div>
+                <div id="sjf-animation" class="animation-area">
+                    <div class="timer-display">Waktu: <span class="current-time">0</span></div>
+                    <div class="queue"><div class="queue-label">Antrian Proses (Waiting)</div></div>
+                    <div class="cpu">CPU (Running)</div>
+                    <div class="completed"><div class="completed-label">Proses Selesai (Completed)</div></div>
+                    <div class="status-box">
+                        <div class="status-item"><div class="status-indicator waiting-color"></div><span>Waiting</span></div>
+                        <div class="status-item"><div class="status-indicator running-color"></div><span>Running</span></div>
+                        <div class="status-item"><div class="status-indicator completed-color"></div><span>Completed</span></div>
+                    </div>
+                </div>
+                <div class="animation-controls">
+                    <button onclick="runSingleAnimation('sjf')" class="run-animation-btn">Jalankan Animasi SJF</button>
+                </div>
+            </div>
+            
+            <div id="sjf-preemptive-tab" class="tab-content">
+                <h3>Shortest Job First (SJF) - Preemptive</h3>
+                <p>Proses dengan sisa burst time terpendek dijalankan terlebih dahulu. Proses baru dapat menginterupsi proses yang sedang berjalan jika burst time-nya lebih pendek.</p>
+                <div id="sjfp-gantt" class="gantt-chart">
+                    <div class="empty-msg">Belum ada simulasi yang dijalankan.</div>
+                </div>
+                <div id="sjfp-metrics" class="metrics"></div>
+                <div id="sjfp-animation" class="animation-area">
+                    <div class="timer-display">Waktu: <span class="current-time">0</span></div>
+                    <div class="queue"><div class="queue-label">Antrian Proses (Waiting)</div></div>
+                    <div class="cpu">CPU (Running)</div>
+                    <div class="completed"><div class="completed-label">Proses Selesai (Completed)</div></div>
+                    <div class="status-box">
+                        <div class="status-item"><div class="status-indicator waiting-color"></div><span>Waiting</span></div>
+                        <div class="status-item"><div class="status-indicator running-color"></div><span>Running</span></div>
+                        <div class="status-item"><div class="status-indicator completed-color"></div><span>Completed</span></div>
+                    </div>
+                </div>
+                <div class="animation-controls">
+                    <button onclick="runSingleAnimation('sjfp')" class="run-animation-btn">Jalankan Animasi SJF Preemptive</button>
+                </div>
+            </div>
+            
+            <div id="rr-tab" class="tab-content">
+                <h3>Round Robin</h3>
+                <p>Setiap proses diberi waktu CPU yang sama secara bergiliran (time quantum).</p>
+                <div id="rr-gantt" class="gantt-chart">
+                    <div class="empty-msg">Belum ada simulasi yang dijalankan.</div>
+                </div>
+                <div id="rr-metrics" class="metrics"></div>
+                <div id="rr-animation" class="animation-area">
+                    <div class="timer-display">Waktu: <span class="current-time">0</span></div>
+                    <div class="queue"><div class="queue-label">Antrian Proses (Waiting)</div></div>
+                    <div class="cpu">CPU (Running)</div>
+                    <div class="completed"><div class="completed-label">Proses Selesai (Completed)</div></div>
+                    <div class="status-box">
+                        <div class="status-item"><div class="status-indicator waiting-color"></div><span>Waiting</span></div>
+                        <div class="status-item"><div class="status-indicator running-color"></div><span>Running</span></div>
+                        <div class="status-item"><div class="status-indicator completed-color"></div><span>Completed</span></div>
+                    </div>
+                </div>
+                <div class="animation-controls">
+                    <button onclick="runSingleAnimation('rr')" class="run-animation-btn">Jalankan Animasi Round Robin</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color" style="background-color: #e74c3c;"></div><span>P1</span></div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #3498db;"></div><span>P2</span></div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #2ecc71;"></div><span>P3</span></div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #f39c12;"></div><span>P4</span></div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #9b59b6;"></div><span>P5</span></div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #1abc9c;"></div><span>P6</span></div>
+            <div class="legend-item"><div class="legend-color" style="background-color: #34495e;"></div><span>P7+</span></div>
+        </div>
+    </div>
+
+    <script src="Penjadwalan.js"></script>
+
+    <footer style="text-align: center; padding: 10px; margin-top: 20px; font-size: 14px; color: #888;">
+        &copy; 2025 Simulasi Penjadwalan Proses. Dibuat oleh Kelompok 5.
+    </footer>
+    
+</body>
+</html>
